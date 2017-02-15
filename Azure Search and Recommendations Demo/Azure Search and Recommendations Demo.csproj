@@ -199,6 +199,7 @@
     <Content Include="Views\Cars\Details.cshtml" />
     <Content Include="Views\Cars\Edit.cshtml" />
     <Content Include="Views\Cars\Index.cshtml" />
+    <Content Include="Views\Cars\CreateIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -215,6 +216,12 @@
     <EmbeddedResource Include="Migrations\201702132329126_AddCarModel.resx">
       <DependentUpon>201702132329126_AddCarModel.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureSearchService\AzureSearchService.csproj">
+      <Project>{825ebbcc-079c-4536-ac16-ba38c84b7667}</Project>
+      <Name>AzureSearchService</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

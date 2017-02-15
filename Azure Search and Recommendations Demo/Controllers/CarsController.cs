@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Azure_Search_and_Recommendations_Demo.DAL;
 using Azure_Search_and_Recommendations_Demo.Models;
+using AzureSearchService;
+using Microsoft.Azure.Search;
+using Microsoft.Azure.Search.Models;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
     public class CarsController : Controller
     {
         private SearchContext db = new SearchContext();
+        private AzureSearchManager azureSearchManager = new AzureSearchManager();
 
         // GET: Cars
         public ActionResult Index()
@@ -47,12 +47,16 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Make,Model,Year,Double")] Car car)
+        public ActionResult Create([Bind(Include = "Id,Make,Model,Year,Rating")] Car car)
         {
             if (ModelState.IsValid)
             {
                 db.Cars.Add(car);
                 db.SaveChanges();
+
+                azureSearchManager.UpdateIndex(car);
+
+
                 return RedirectToAction("Index");
             }
 
@@ -113,6 +117,26 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
             Car car = db.Cars.Find(id);
             db.Cars.Remove(car);
             db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult CreateIndex()
+        {
+            return View();
+        }
+
+        [HttpPost, ActionName("CreateIndex")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateIndexPost()
+        {
+            var definition = new Index()
+            {
+                Name = "cars",
+                Fields = FieldBuilder.BuildForType<Car>()
+            };
+
+            azureSearchManager.CreateIndex(definition);
+
             return RedirectToAction("Index");
         }
 
