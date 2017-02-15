@@ -56,7 +56,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                 db.Cars.Add(car);
                 db.SaveChanges();
 
-                List<CarSearchModel> test = new List<CarSearchModel>()
+                List<CarSearchModel> carDocument = new List<CarSearchModel>()
                 {
                     new CarSearchModel
                     {
@@ -67,7 +67,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                        Rating = car.Rating
                     }
                 };
-                azureSearchManager.AddOrUpdateDocumentToIndex(test, "cars");
+                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
 
                 return RedirectToAction("Index");
             }
@@ -95,12 +95,27 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Make,Model,Year,Double")] Car car)
+        public ActionResult Edit([Bind(Include = "Id,Make,Model,Year,Rating")] Car car)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(car).State = EntityState.Modified;
                 db.SaveChanges();
+
+                List<CarSearchModel> carDocument = new List<CarSearchModel>()
+                {
+                    new CarSearchModel
+                    {
+                        Id = car.Id.ToString(),
+                       Make = car.Make,
+                       Model = car.Model,
+                       Year = car.Year,
+                       Rating = car.Rating
+                    }
+                };
+
+                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
+
                 return RedirectToAction("Index");
             }
             return View(car);
