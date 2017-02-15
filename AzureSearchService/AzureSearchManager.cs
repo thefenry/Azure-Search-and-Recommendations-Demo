@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 
@@ -20,21 +22,47 @@ namespace AzureSearchService
             _serviceClient.Indexes.Create(definition);
         }
 
-        public void UpdateIndex<TData>(TData entity) where TData : class
+
+        public DocumentIndexResult AddOrUpdateDocumentToIndex<T>(List<T> documents, string indexName) where T : class, new()
         {
-            //var unknown = entity.GetType().GetMethod("MyFunction").Invoke(entity, null);
+            ISearchIndexClient indexClient = _serviceClient.Indexes.GetClient(indexName);
+            IndexBatch<T> batch = IndexBatch.Upload(documents);
 
-            //var definition = new Index()
-            //{
-            //    Name = "hotels",
-            //Fields = FieldBuilder.BuildForType<unknown>()
-            //};
-
-           //GetEntityIndexInfo(entity, "update");
+            try
+            {
+                return indexClient.Documents.Index(batch);
+            }
+            catch (IndexBatchException e)
+            {
+                throw e;
+            }
         }
 
- 
 
-       
+        //public void UpdateIndex<TData>(TData entity) where TData : class
+        //{
+        //    ISearchIndexClient indexClient = _serviceClient.Indexes.GetClient("cars");
+
+        //    //var actions = new IndexAction
+        //    //{
+        //    //}
+        //    var test = IndexAction.Upload<Index>(entity);
+
+        //    indexClient.Documents.Index(test);
+
+
+
+        //}
+
+        //public void UpdateIndex<T>(List<T> test, string v)
+        //{
+        //    ISearchIndexClient indexClient = _serviceClient.Indexes.GetClient("cars");
+
+        //    indexClient.Documents.Index(test)
+
+        //    var batch = IndexBatch.New(test);
+
+        //    throw new NotImplementedException();
+        //}
     }
 }

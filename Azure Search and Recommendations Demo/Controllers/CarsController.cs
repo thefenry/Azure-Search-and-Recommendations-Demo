@@ -1,10 +1,12 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Azure_Search_and_Recommendations_Demo.DAL;
 using Azure_Search_and_Recommendations_Demo.Models;
 using AzureSearchService;
+using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 
@@ -54,8 +56,18 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                 db.Cars.Add(car);
                 db.SaveChanges();
 
-                azureSearchManager.UpdateIndex(car);
-
+                List<CarSearchModel> test = new List<CarSearchModel>()
+                {
+                    new CarSearchModel
+                    {
+                        Id = car.Id.ToString(),
+                       Make = car.Make,
+                       Model = car.Model,
+                       Year = car.Year,
+                       Rating = car.Rating
+                    }
+                };
+                azureSearchManager.AddOrUpdateDocumentToIndex(test, "cars");
 
                 return RedirectToAction("Index");
             }
@@ -135,7 +147,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                 Fields = FieldBuilder.BuildForType<Car>()
             };
 
-            Field field = definition.Fields.FirstOrDefault(x => x.Name == "Id"); 
+            Field field = definition.Fields.FirstOrDefault(x => x.Name == "Id");
             field.Type = DataType.String;
 
             azureSearchManager.CreateIndex(definition);
