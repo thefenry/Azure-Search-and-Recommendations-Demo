@@ -151,9 +151,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702132329126_AddCarModel.cs" />
-    <Compile Include="Migrations\201702132329126_AddCarModel.Designer.cs">
-      <DependentUpon>201702132329126_AddCarModel.cs</DependentUpon>
+    <Compile Include="Migrations\201702151840393_AddCarModel.cs" />
+    <Compile Include="Migrations\201702151840393_AddCarModel.Designer.cs">
+      <DependentUpon>201702151840393_AddCarModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Car.cs" />
@@ -213,15 +213,15 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702132329126_AddCarModel.resx">
-      <DependentUpon>201702132329126_AddCarModel.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AzureSearchService\AzureSearchService.csproj">
       <Project>{825ebbcc-079c-4536-ac16-ba38c84b7667}</Project>
       <Name>AzureSearchService</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201702151840393_AddCarModel.resx">
+      <DependentUpon>201702151840393_AddCarModel.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

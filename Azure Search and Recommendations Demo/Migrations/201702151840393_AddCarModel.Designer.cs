@@ -13,7 +13,7 @@ namespace Azure_Search_and_Recommendations_Demo.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201702132329126_AddCarModel"; }
+            get { return "201702151840393_AddCarModel"; }
         }
         
         string IMigrationMetadata.Source
