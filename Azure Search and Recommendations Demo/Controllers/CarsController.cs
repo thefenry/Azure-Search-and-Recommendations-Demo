@@ -144,6 +144,21 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
             Car car = db.Cars.Find(id);
             db.Cars.Remove(car);
             db.SaveChanges();
+
+            List<CarSearchModel> carDocument = new List<CarSearchModel>()
+                {
+                    new CarSearchModel
+                    {
+                        Id = car.Id.ToString(),
+                       Make = car.Make,
+                       Model = car.Model,
+                       Year = car.Year,
+                       Rating = car.Rating
+                    }
+                };
+
+            azureSearchManager.DeleteDocumentInIndex(carDocument, "cars");
+
             return RedirectToAction("Index");
         }
 
@@ -156,16 +171,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateIndexPost()
         {
-            var definition = new Index()
-            {
-                Name = "cars",
-                Fields = FieldBuilder.BuildForType<Car>()
-            };
-
-            Field field = definition.Fields.FirstOrDefault(x => x.Name == "Id");
-            field.Type = DataType.String;
-
-            azureSearchManager.CreateIndex(definition);
+            azureSearchManager.CreateIndex<Car>("cars");
 
             return RedirectToAction("Index");
         }
