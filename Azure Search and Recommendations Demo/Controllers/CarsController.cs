@@ -135,6 +135,9 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                 Fields = FieldBuilder.BuildForType<Car>()
             };
 
+            Field field = definition.Fields.FirstOrDefault(x => x.Name == "Id"); 
+            field.Type = DataType.String;
+
             azureSearchManager.CreateIndex(definition);
 
             return RedirectToAction("Index");
