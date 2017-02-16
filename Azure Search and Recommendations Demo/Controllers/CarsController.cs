@@ -9,6 +9,7 @@ using AzureSearchService;
 using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using System.Web.Http.Cors;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
@@ -170,6 +171,15 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         [HttpPost, ActionName("CreateIndex")]
         [ValidateAntiForgeryToken]
         public ActionResult CreateIndexPost()
+        {
+            azureSearchManager.CreateIndex<Car>("cars");
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        public ActionResult CreateCars(List<Car> cars)
         {
             azureSearchManager.CreateIndex<Car>("cars");
 
