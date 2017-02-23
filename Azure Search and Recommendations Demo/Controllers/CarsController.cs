@@ -16,7 +16,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
     public class CarsController : Controller
     {
         private SearchContext db = new SearchContext();
-        private AzureSearchManager azureSearchManager = new AzureSearchManager();
+        //private AzureSearchManager azureSearchManager = new AzureSearchManager();
 
         // GET: Cars
         public ActionResult Index()
@@ -68,7 +68,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                        Rating = car.Rating
                     }
                 };
-                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
+                //azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
 
                 return RedirectToAction("Index");
             }
@@ -115,7 +115,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                     }
                 };
 
-                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
+                //azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
 
                 return RedirectToAction("Index");
             }
@@ -158,7 +158,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                     }
                 };
 
-            azureSearchManager.DeleteDocumentInIndex(carDocument, "cars");
+            //azureSearchManager.DeleteDocumentInIndex(carDocument, "cars");
 
             return RedirectToAction("Index");
         }
@@ -172,7 +172,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateIndexPost()
         {
-            azureSearchManager.CreateIndex<Car>("cars");
+            //azureSearchManager.CreateIndex<Car>("cars");
 
             return RedirectToAction("Index");
         }
@@ -181,7 +181,8 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         [EnableCors(origins: "*", headers: "*", methods: "*")]
         public ActionResult CreateCars(List<Car> cars)
         {
-            azureSearchManager.CreateIndex<Car>("cars");
+            
+            //azureSearchManager.CreateIndex<Car>("cars");
 
             return RedirectToAction("Index");
         }
