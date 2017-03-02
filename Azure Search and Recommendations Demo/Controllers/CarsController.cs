@@ -9,6 +9,8 @@ using AzureSearchService;
 using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
 using System.Web.Http.Cors;
 using RecommendationsServiceLibrary;
+using Azure_Search_and_Recommendations_Demo.Interfaces;
+using Azure_Search_and_Recommendations_Demo.Services;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
@@ -195,7 +197,20 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
             var test = recommendationsLibrary.CreateModel(modelName, description);
             return View();
         }
-              
+
+        public ActionResult UploadCatalog()
+        {
+            ICsvFileConverter csvFileConverter = new CsvFileConverter();
+            string fileUrl = csvFileConverter.ConvertModelToCsv(db.Cars.ToList());
+            string baseUri = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0";
+            string modelName = "CarsRecommendationModel";
+            RecommendationsLibrary recommendationsLibrary = new RecommendationsLibrary("270d8ea401774398a4ef01286d5d952e", baseUri);
+            var test = recommendationsLibrary.UploadModel("579cd5a2-150b-402b-868a-e6d3fdc7867f", modelName, fileUrl);
+
+            //"579cd5a2-150b-402b-868a-e6d3fdc7867f"
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

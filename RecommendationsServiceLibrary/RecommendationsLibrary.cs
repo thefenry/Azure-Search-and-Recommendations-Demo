@@ -51,7 +51,9 @@ namespace RecommendationsServiceLibrary
             return modelInfo;
         }
 
-
-
+        public object UploadModel(string modelId, string modelName, string fileUrl)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
