@@ -73,8 +73,8 @@
       <HintPath>..\packages\Microsoft.Spatial.6.15.0\lib\portable-net45+win+wpa81\Microsoft.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -220,6 +220,7 @@
     <Content Include="Views\Cars\Edit.cshtml" />
     <Content Include="Views\Cars\Index.cshtml" />
     <Content Include="Views\Cars\CreateIndex.cshtml" />
+    <Content Include="Views\Cars\CreateRecommendationsModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -238,6 +239,10 @@
     <ProjectReference Include="..\AzureSearchService\AzureSearchService.csproj">
       <Project>{825ebbcc-079c-4536-ac16-ba38c84b7667}</Project>
       <Name>AzureSearchService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RecommendationsServiceLibrary\RecommendationsServiceLibrary.csproj">
+      <Project>{A3EC47BF-C858-47B3-A18F-193F81B151CE}</Project>
+      <Name>RecommendationsServiceLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

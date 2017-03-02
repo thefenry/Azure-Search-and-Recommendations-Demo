@@ -7,9 +7,8 @@ using Azure_Search_and_Recommendations_Demo.DAL;
 using Azure_Search_and_Recommendations_Demo.Models;
 using AzureSearchService;
 using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
-using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
 using System.Web.Http.Cors;
+using RecommendationsServiceLibrary;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
@@ -186,6 +185,17 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult CreateRecommendationsModel()
+        {
+            string modelName = "CarsRecommendationModel";
+            string description = "TestingDesc";
+            string baseUri = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0";
+
+            RecommendationsLibrary recommendationsLibrary = new RecommendationsLibrary("270d8ea401774398a4ef01286d5d952e", baseUri);
+            var test = recommendationsLibrary.CreateModel(modelName, description);
+            return View();
+        }
+              
         protected override void Dispose(bool disposing)
         {
             if (disposing)
