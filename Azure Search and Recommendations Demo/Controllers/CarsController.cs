@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
+using Azure_Search_and_Recommendations_Demo.DAL;
+using Azure_Search_and_Recommendations_Demo.Interfaces;
+using Azure_Search_and_Recommendations_Demo.Models;
+using Azure_Search_and_Recommendations_Demo.Services;
+using AzureSearchService;
+using RecommendationsServiceLibrary;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web.Mvc;
-using Azure_Search_and_Recommendations_Demo.DAL;
-using Azure_Search_and_Recommendations_Demo.Models;
-using AzureSearchService;
-using Azure_Search_and_Recommendations_Demo.AzureSearchModels;
 using System.Web.Http.Cors;
-using RecommendationsServiceLibrary;
-using Azure_Search_and_Recommendations_Demo.Interfaces;
-using Azure_Search_and_Recommendations_Demo.Services;
-using System.IO;
+using System.Web.Mvc;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
