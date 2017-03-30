@@ -8,14 +8,14 @@ namespace Azure_Search_and_Recommendations_Demo.Services
 {
     public class CsvFileConverter : ICsvFileConverter
     {
-        public string ConvertModelToCsv(List<Car> carList)
+        public FileInfo ConvertModelToCsv(List<Car> carList)
         {
-            string path = @"c:\temp\catalog.csv";
+            string path = @"C:\test.csv";
             string csv = CreateCsvString(carList);
 
             WriteFile(path, csv);
 
-            return path;
+            return new FileInfo(path);
         }
 
         private static string CreateCsvString(List<Car> carList)

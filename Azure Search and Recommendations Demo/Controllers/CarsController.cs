@@ -11,6 +11,7 @@ using System.Web.Http.Cors;
 using RecommendationsServiceLibrary;
 using Azure_Search_and_Recommendations_Demo.Interfaces;
 using Azure_Search_and_Recommendations_Demo.Services;
+using System.IO;
 
 namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
@@ -201,11 +202,10 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
         public ActionResult UploadCatalog()
         {
             ICsvFileConverter csvFileConverter = new CsvFileConverter();
-            string fileUrl = csvFileConverter.ConvertModelToCsv(db.Cars.ToList());
+            FileInfo fileInfo = csvFileConverter.ConvertModelToCsv(db.Cars.ToList());
             string baseUri = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0";
-            string modelName = "CarsRecommendationModel";
             RecommendationsLibrary recommendationsLibrary = new RecommendationsLibrary("270d8ea401774398a4ef01286d5d952e", baseUri);
-            var test = recommendationsLibrary.UploadModel("579cd5a2-150b-402b-868a-e6d3fdc7867f", modelName, fileUrl);
+            var test = recommendationsLibrary.UploadModel("7c4fd779-2363-49ac-8525-f904139cab2c", fileInfo.Name, fileInfo.FullName);
 
             //"579cd5a2-150b-402b-868a-e6d3fdc7867f"
             return View();

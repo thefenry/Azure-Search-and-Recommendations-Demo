@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Net.Http;
 
 namespace RecommendationsServiceLibrary
@@ -51,9 +52,25 @@ namespace RecommendationsServiceLibrary
             return modelInfo;
         }
 
-        public object UploadModel(string modelId, string modelName, string fileUrl)
+        public object UploadModel(string modelId, string fileName, string fileUrl)
         {
-            throw new NotImplementedException();
+
+            string uri = BaseUri + "/models/" + modelId + "/catalog?catalogDisplayName=" + fileName;
+
+            using (var filestream = new FileStream(fileUrl, FileMode.Open, FileAccess.Read))
+            {
+                var response = _httpClient.PostAsync(uri, new StreamContent(filestream)).Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception(
+                        string.Format("Error {0}: Failed to import catalog items {1}, for model {2} \n reason {3}",
+                            response.StatusCode, fileUrl, modelId, response.Content));
+                }
+
+                string responseJson = response.Content.ReadAsStringAsync().Result;
+                return JsonConvert.DeserializeObject<CatalogImportStats>(responseJson);
+            }
         }
     }
 }
