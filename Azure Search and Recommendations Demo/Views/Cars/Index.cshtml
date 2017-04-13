@@ -51,24 +51,58 @@
 
 </table>
 
-<a href="" class="btn-lg" onclick="getCars();">GetCars</a>
+<input type="search" id="search-input" />
+<button type="submit" class="btn btn-default" onclick="searchCars();"><span class="glyphicon glyphicon-search"></span></button>
+
+
+<a href="#" class="btn-lg" onclick="getCars();">GetCars</a>
+
+<textarea id="results"></textarea>
 
 <script>
 
     function getCars() {
+        event.preventDefault();
+
+        var results = [];
         // Assign handlers immediately after making the request,
         // and remember the jqxhr object for this request
         var jqxhr = $.get(window.location.origin + "/api/Search/GetCars", function () {
 
         })
             .done(function (data) {
-
+                for (var i = 0; i < data.length; i++) {
+                    results.push(data[i].Document.Make + "-" + data[i].Document.Year + "\n");
+                }
             })
             .fail(function (error) {
 
             })
             .always(function () {
-
+                $("#results").html(results);
             });
+    }
+
+
+    function searchCars() {
+        event.preventDefault();
+
+        searchTerm = $("#search-input").val();
+        
+        var results = [];
+
+        $.ajax({
+            url: window.location.origin + "/api/Search/CarsSearch",
+            type: 'POST',
+            data: JSON.stringify(searchTerm),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                $("#results").html(results);
+            },
+            error: function (res) {
+                alert("Bad thing happend! " + res.statusText);
+            }
+        });
     }
 </script>

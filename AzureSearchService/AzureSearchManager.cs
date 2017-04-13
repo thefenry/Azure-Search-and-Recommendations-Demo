@@ -76,5 +76,23 @@ namespace AzureSearchService
                 throw e;
             }
         }
+
+        public DocumentSearchResult<T> GetAllResults<T>(string indexName) where T : class, new()
+        {
+            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
+            string adminApiKey = ConfigurationManager.AppSettings["SearchServiceAdminApiKey"];
+            SearchIndexClient indexClient = new SearchIndexClient(searchServiceName, indexName, new SearchCredentials(adminApiKey));
+
+            return indexClient.Documents.Search<T>("*");            
+        }
+
+        public DocumentSearchResult<T> SearchContent<T>(string indexName, string searchTerm) where T : class, new()
+        {
+            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
+            string adminApiKey = ConfigurationManager.AppSettings["SearchServiceAdminApiKey"];
+            SearchIndexClient indexClient = new SearchIndexClient(searchServiceName, indexName, new SearchCredentials(adminApiKey));
+
+            return indexClient.Documents.Search<T>(searchTerm);
+        }
     }
 }
