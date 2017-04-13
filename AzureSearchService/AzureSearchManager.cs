@@ -11,15 +11,21 @@ namespace AzureSearchService
     {
         private readonly SearchServiceClient _searchClient;
 
-        public AzureSearchManager()
+        private string SearchServiceName
         {
-            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
-            string adminApiKey = ConfigurationManager.AppSettings["SearchServiceAdminApiKey"];
-
-            _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(adminApiKey));
+            get { return ConfigurationManager.AppSettings["SearchServiceName"]; }            
         }
 
+        public string AdminApiKey
+        {
+            get { return ConfigurationManager.AppSettings["SearchServiceAdminApiKey"]; }            
+        }
 
+        public AzureSearchManager()
+        {
+            _searchClient = new SearchServiceClient(SearchServiceName, new SearchCredentials(AdminApiKey));
+        }
+        
         public void CreateIndex<T>(string indexName)
         {
             if (_searchClient.Indexes.Exists(indexName))
@@ -61,7 +67,7 @@ namespace AzureSearchService
                 throw e;
             }
         }
-        
+
         public DocumentIndexResult DeleteDocumentInIndex<T>(List<T> documents, string indexName) where T : class, new()
         {
             ISearchIndexClient indexClient = _searchClient.Indexes.GetClient(indexName);
@@ -79,20 +85,21 @@ namespace AzureSearchService
 
         public DocumentSearchResult<T> GetAllResults<T>(string indexName) where T : class, new()
         {
-            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
-            string adminApiKey = ConfigurationManager.AppSettings["SearchServiceAdminApiKey"];
-            SearchIndexClient indexClient = new SearchIndexClient(searchServiceName, indexName, new SearchCredentials(adminApiKey));
+            SearchIndexClient indexClient = GetIndexClient(indexName);
 
-            return indexClient.Documents.Search<T>("*");            
+            return indexClient.Documents.Search<T>("*");
         }
-
+        
         public DocumentSearchResult<T> SearchContent<T>(string indexName, string searchTerm) where T : class, new()
-        {
-            string searchServiceName = ConfigurationManager.AppSettings["SearchServiceName"];
-            string adminApiKey = ConfigurationManager.AppSettings["SearchServiceAdminApiKey"];
-            SearchIndexClient indexClient = new SearchIndexClient(searchServiceName, indexName, new SearchCredentials(adminApiKey));
+        {          
+            SearchIndexClient indexClient = GetIndexClient(indexName);
 
             return indexClient.Documents.Search<T>(searchTerm);
+        }
+
+        private SearchIndexClient GetIndexClient(string indexName)
+        {
+            return new SearchIndexClient(SearchServiceName, indexName, new SearchCredentials(AdminApiKey));
         }
     }
 }
