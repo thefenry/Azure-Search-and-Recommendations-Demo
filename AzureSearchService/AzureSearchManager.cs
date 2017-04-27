@@ -21,7 +21,7 @@ namespace AzureSearchService
         {
             get { return ConfigurationManager.AppSettings["SearchServiceAdminApiKey"]; }
         }
-                
+
         public AzureSearchManager(string indexName)
         {
             _searchClient = new SearchServiceClient(SearchServiceName, new SearchCredentials(AdminApiKey));
@@ -56,7 +56,7 @@ namespace AzureSearchService
 
 
         public DocumentIndexResult AddOrUpdateDocumentToIndex<T>(List<T> documents) where T : class, new()
-        {          
+        {
             IndexBatch<T> batch = IndexBatch.Upload(documents);
 
             try
@@ -70,7 +70,7 @@ namespace AzureSearchService
         }
 
         public DocumentIndexResult DeleteDocumentInIndex<T>(List<T> documents) where T : class, new()
-        {           
+        {
             IndexBatch<T> batch = IndexBatch.Delete(documents);
 
             try
@@ -83,29 +83,33 @@ namespace AzureSearchService
             }
         }
 
-        public DocumentSearchResult<T> GetAllResults<T>() where T : class, new()
-        {           
-            return _indexClient.Documents.Search<T>("*");
-        }
-
-        public DocumentSearchResult<T> SearchContent<T>(string searchTerm) where T : class, new()
+        public DocumentSearchResult<T> SearchContent<T>(string searchTerm = "*", List<string> facets = null) where T : class, new()
         {
-            return _indexClient.Documents.Search<T>(searchTerm);
+            SearchParameters searchParams = SetSearchParams(string.Empty, facets);
+            
+            return _indexClient.Documents.Search<T>(searchTerm, searchParams);
         }
-
-        public DocumentSearchResult<T> FilterContent<T>(string filter) where T : class, new()
+        
+        public DocumentSearchResult<T> FilterContent<T>(string filter, List<string> facets = null) where T : class, new()
         {
-            SearchParameters parameters = new SearchParameters()
-            {
-                Filter = filter,
-                Select = new[] { "hotelId", "description" }
-            };
-             return _indexClient.Documents.Search<T>("*", parameters);
+            SearchParameters parameters = SetSearchParams(filter, facets);
+
+            return _indexClient.Documents.Search<T>("*", parameters);
         }
 
         private SearchIndexClient GetIndexClient(string indexName)
         {
             return new SearchIndexClient(SearchServiceName, indexName, new SearchCredentials(AdminApiKey));
         }
+
+        private SearchParameters SetSearchParams(string filter, List<string> facets)
+        {
+            return new SearchParameters()
+            {
+                Facets = facets,
+                Filter = filter
+            };
+        }
+
     }
 }

@@ -9,12 +9,14 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
     public class SearchController : ApiController
     {
         private AzureSearchManager azureSearchManager = new AzureSearchManager("cars");
+        List<string> defaultFacets = new List<string>() { "Model", "Year" };
 
-        // GET api/<controller>
-        [HttpGet]
+    // GET api/<controller>
+    [HttpGet]
         public IList<SearchResult<Car>> GetCars()
         {
-            return azureSearchManager.GetAllResults<Car>().Results;
+            var test = azureSearchManager.SearchContent<Car>();
+            return azureSearchManager.SearchContent<Car>().Results;
         }
 
         [HttpPost]
