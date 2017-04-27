@@ -8,19 +8,19 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
 {
     public class SearchController : ApiController
     {
-        private AzureSearchManager azureSearchManager = new AzureSearchManager();
+        private AzureSearchManager azureSearchManager = new AzureSearchManager("cars");
 
         // GET api/<controller>
         [HttpGet]
         public IList<SearchResult<Car>> GetCars()
         {
-            return azureSearchManager.GetAllResults<Car>("cars").Results;
+            return azureSearchManager.GetAllResults<Car>().Results;
         }
 
         [HttpPost]
         public IList<SearchResult<Car>> CarsSearch([FromBody]string searchTerm)
         {
-            return azureSearchManager.SearchContent<Car>("cars", searchTerm).Results;            
+            return azureSearchManager.SearchContent<Car>(searchTerm).Results;            
         }
     }
 }

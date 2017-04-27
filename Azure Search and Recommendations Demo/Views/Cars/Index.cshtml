@@ -97,12 +97,21 @@
             data: JSON.stringify(searchTerm),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: function (res) {
-                $("#results").html(results);
+            success: function (results) {
+                populateTextBox(results);               
             },
             error: function (res) {
                 alert("Bad thing happend! " + res.statusText);
             }
         });
+    }
+
+    function populateTextBox(data) {
+        var results = [];
+        for (var i = 0; i < data.length; i++) {
+            results.push(data[i].Document.Model + " - " + data[i].Document.Year + "\n");
+        };
+
+        $("#results").html(results);
     }
 </script>

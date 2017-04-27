@@ -18,7 +18,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
     public class CarsController : Controller
     {
         private SearchContext db = new SearchContext();
-        private AzureSearchManager azureSearchManager = new AzureSearchManager();
+        private AzureSearchManager azureSearchManager = new AzureSearchManager("cars");
 
         // GET: Cars
         public ActionResult Index()
@@ -70,7 +70,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                        Rating = car.Rating
                     }
                 };
-                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
+                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument);
 
                 return RedirectToAction("Index");
             }
@@ -117,7 +117,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                     }
                 };
 
-                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument, "cars");
+                azureSearchManager.AddOrUpdateDocumentToIndex(carDocument);
 
                 return RedirectToAction("Index");
             }
@@ -160,7 +160,7 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
                     }
                 };
 
-            azureSearchManager.DeleteDocumentInIndex(carDocument, "cars");
+            azureSearchManager.DeleteDocumentInIndex(carDocument);
 
             return RedirectToAction("Index");
         }

@@ -10,22 +10,24 @@ namespace AzureSearchService
     public class AzureSearchManager
     {
         private readonly SearchServiceClient _searchClient;
+        private SearchIndexClient _indexClient;
 
         private string SearchServiceName
         {
-            get { return ConfigurationManager.AppSettings["SearchServiceName"]; }            
+            get { return ConfigurationManager.AppSettings["SearchServiceName"]; }
         }
 
         public string AdminApiKey
         {
-            get { return ConfigurationManager.AppSettings["SearchServiceAdminApiKey"]; }            
+            get { return ConfigurationManager.AppSettings["SearchServiceAdminApiKey"]; }
         }
-
-        public AzureSearchManager()
+                
+        public AzureSearchManager(string indexName)
         {
             _searchClient = new SearchServiceClient(SearchServiceName, new SearchCredentials(AdminApiKey));
+            _indexClient = GetIndexClient(indexName);
         }
-        
+
         public void CreateIndex<T>(string indexName)
         {
             if (_searchClient.Indexes.Exists(indexName))
@@ -53,14 +55,13 @@ namespace AzureSearchService
         }
 
 
-        public DocumentIndexResult AddOrUpdateDocumentToIndex<T>(List<T> documents, string indexName) where T : class, new()
-        {
-            ISearchIndexClient indexClient = _searchClient.Indexes.GetClient(indexName);
+        public DocumentIndexResult AddOrUpdateDocumentToIndex<T>(List<T> documents) where T : class, new()
+        {          
             IndexBatch<T> batch = IndexBatch.Upload(documents);
 
             try
             {
-                return indexClient.Documents.Index(batch);
+                return _indexClient.Documents.Index(batch);
             }
             catch (IndexBatchException e)
             {
@@ -68,14 +69,13 @@ namespace AzureSearchService
             }
         }
 
-        public DocumentIndexResult DeleteDocumentInIndex<T>(List<T> documents, string indexName) where T : class, new()
-        {
-            ISearchIndexClient indexClient = _searchClient.Indexes.GetClient(indexName);
+        public DocumentIndexResult DeleteDocumentInIndex<T>(List<T> documents) where T : class, new()
+        {           
             IndexBatch<T> batch = IndexBatch.Delete(documents);
 
             try
             {
-                return indexClient.Documents.Index(batch);
+                return _indexClient.Documents.Index(batch);
             }
             catch (IndexBatchException e)
             {
@@ -83,18 +83,24 @@ namespace AzureSearchService
             }
         }
 
-        public DocumentSearchResult<T> GetAllResults<T>(string indexName) where T : class, new()
-        {
-            SearchIndexClient indexClient = GetIndexClient(indexName);
-
-            return indexClient.Documents.Search<T>("*");
+        public DocumentSearchResult<T> GetAllResults<T>() where T : class, new()
+        {           
+            return _indexClient.Documents.Search<T>("*");
         }
-        
-        public DocumentSearchResult<T> SearchContent<T>(string indexName, string searchTerm) where T : class, new()
-        {          
-            SearchIndexClient indexClient = GetIndexClient(indexName);
 
-            return indexClient.Documents.Search<T>(searchTerm);
+        public DocumentSearchResult<T> SearchContent<T>(string searchTerm) where T : class, new()
+        {
+            return _indexClient.Documents.Search<T>(searchTerm);
+        }
+
+        public DocumentSearchResult<T> FilterContent<T>(string filter) where T : class, new()
+        {
+            SearchParameters parameters = new SearchParameters()
+            {
+                Filter = filter,
+                Select = new[] { "hotelId", "description" }
+            };
+             return _indexClient.Documents.Search<T>("*", parameters);
         }
 
         private SearchIndexClient GetIndexClient(string indexName)
