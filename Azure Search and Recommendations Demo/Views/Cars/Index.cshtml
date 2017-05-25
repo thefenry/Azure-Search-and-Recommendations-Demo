@@ -19,8 +19,10 @@
             <span class="glyphicon glyphicon-search"></span>
         </button>
 
-        <div ng-repeat="car in car.cars">
+        <a ng-repeat="car in car.cars" ng-href="Cars/Details/{{car.Document.Id}}" >
+            <div>
             {{car.Document.Make}} - {{car.Document.Model}} - {{car.Document.Year}}
-        </div>
+            </div>
+        </a>
     </div>
 </section>
