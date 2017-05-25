@@ -15,7 +15,6 @@ namespace Azure_Search_and_Recommendations_Demo.Controllers
     [HttpGet]
         public IList<SearchResult<Car>> GetCars()
         {
-            var test = azureSearchManager.SearchContent<Car>();
             return azureSearchManager.SearchContent<Car>().Results;
         }
 
